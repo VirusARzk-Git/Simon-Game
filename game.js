@@ -1,5 +1,9 @@
 
+cacheDom = $('#btnid');
+
 function next_Seq() {
+  // $("#btnid").remove();
+  $(".btnss").hide();
   $("h1").removeClass("margin-zero").addClass("margin-tops");
   User_seq = [];
   level++;
@@ -11,6 +15,7 @@ function next_Seq() {
 }
 
 var color = ["red", "blue", "green", "yellow"];
+const colors = { "red": 1, "blue": 2, "green": 3, "yellow": 4 };
 var level = 0;
 var Comp_seq = [];
 var User_seq = [];
@@ -18,9 +23,22 @@ var game_is_active = false;
 
 $(document).keypress(function () {
   if (!game_is_active) {
+    // $("#btnid").remove();
+    $(".btnss").hide();
+    // document.getElementById("btnid").remove();
     $("h1").text("Level " + level);
     next_Seq();
     game_is_active = true;
+  }
+});
+
+$("#btnid").click(function () {
+  if (!game_is_active) {
+    $("h1").text("Level " + level);
+    next_Seq();
+    game_is_active = true;
+    // $("#btnid").remove();
+    $(".btnss").hide();
   }
 });
 
@@ -29,14 +47,35 @@ function playsound(col) {
   aud.play();
 }
 
+$(document).keypress(function (event) {
+  if (game_is_active) {
+    var h = event.which;
+    var col = "None";
+    if (h === 114)
+      col = "red";
+    else if (h === 98)
+      col = "blue";
+    else if (h === 103)
+      col = "green";
+    else if (h === 121)
+      col = "yellow";
+    if (col in colors) {
+      animatePress(col);
+      User_seq.push(col);
+      check(User_seq.length - 1, col);
+      // $("h1").text(col);
+    }
+  }
+});
+
 $(".btn").click(function () {
   var col = this.getAttribute("id");
   animatePress(col);
   User_seq.push(col);
-  check(User_seq.length - 1,col);
+  check(User_seq.length - 1, col);
 });
 
-function check(curr_level,col) {
+function check(curr_level, col) {
   if (Comp_seq[curr_level] === User_seq[curr_level]) {
     playsound(col);
     if (Comp_seq.length === User_seq.length) {
@@ -72,4 +111,7 @@ function new_Game() {
   level = 0;
   Comp_seq = [];
   game_is_active = false;
+  $(".btnss").show();
+  // document.getElementById("btnid").show();
+  // $(".for-my-btn").append(cacheDom);
 }
